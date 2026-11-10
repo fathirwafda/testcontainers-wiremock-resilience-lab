@@ -1,0 +1,20 @@
+{
+  "priority": 2,
+  "request": {
+    "method": "POST",
+    "urlPath": "/payment/v1/payments",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[?(@.customerId == 'cust-slow')]"
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "fixedDelayMilliseconds": 5000,
+    "jsonBody": {
+      "id": "pay_slow",
+      "status": "succeeded"
+    }
+  }
+}

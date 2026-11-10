@@ -1,0 +1,62 @@
+{
+  "mappings": [
+    {
+      "priority": 2,
+      "scenarioName": "flaky-payment",
+      "requiredScenarioState": "Started",
+      "newScenarioState": "failed-once",
+      "request": {
+        "method": "POST",
+        "urlPath": "/payment/v1/payments",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@.customerId == 'cust-flaky')]"
+          }
+        ]
+      },
+      "response": {
+        "status": 503
+      }
+    },
+    {
+      "priority": 2,
+      "scenarioName": "flaky-payment",
+      "requiredScenarioState": "failed-once",
+      "newScenarioState": "failed-twice",
+      "request": {
+        "method": "POST",
+        "urlPath": "/payment/v1/payments",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@.customerId == 'cust-flaky')]"
+          }
+        ]
+      },
+      "response": {
+        "status": 503
+      }
+    },
+    {
+      "priority": 2,
+      "scenarioName": "flaky-payment",
+      "requiredScenarioState": "failed-twice",
+      "newScenarioState": "Started",
+      "request": {
+        "method": "POST",
+        "urlPath": "/payment/v1/payments",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@.customerId == 'cust-flaky')]"
+          }
+        ]
+      },
+      "response": {
+        "status": 201,
+        "jsonBody": {
+          "id": "pay_after_two_failures",
+          "status": "succeeded"
+        }
+      }
+    }
+  ]
+}

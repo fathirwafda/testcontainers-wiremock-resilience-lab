@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  static:
+    name: Lint, typecheck, unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm run test:unit
+
+  integration:
+    name: Integration + E2E (Testcontainers)
+    needs: static
+    runs-on: ubuntu-latest # has a Docker daemon, which is all Testcontainers needs
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Pre-pull container images
+        run: |
+          docker pull postgres:18.6-alpine &
+          docker pull wiremock/wiremock:3.13.2 &
+          wait
+      - run: npm run test:integration
+      - run: npm run test:e2e
+      - name: Upload JUnit results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: junit-docker-tests
+          path: test-results/
+          if-no-files-found: warn
+          retention-days: 14
+
+  zap:
+    name: OWASP ZAP baseline
+    needs: static
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - name: Start the stack
+        run: docker compose up --build -d --wait
+      - name: ZAP baseline scan (fails on High only)
+        run: bash scripts/zap-baseline.sh
+      - name: Upload ZAP report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: zap-baseline-report
+          path: |
+            zap/reports/zap-report.html
+            zap/reports/zap-report.json
+            zap/reports/zap-report.md
+          if-no-files-found: warn
+          retention-days: 30
+      - name: App logs on failure
+        if: ${{ failure() }}
+        run: docker compose logs app
+      - name: Tear down
+        if: ${{ always() }}
+        run: docker compose down -v

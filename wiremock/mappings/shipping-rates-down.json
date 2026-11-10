@@ -1,0 +1,15 @@
+{
+  "priority": 2,
+  "request": {
+    "method": "GET",
+    "urlPath": "/shipping/v1/rates",
+    "queryParameters": {
+      "postcode": {
+        "equalTo": "0000"
+      }
+    }
+  },
+  "response": {
+    "status": 503
+  }
+}

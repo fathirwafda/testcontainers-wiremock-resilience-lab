@@ -1,0 +1,3 @@
+# zap-baseline.py rule config. Format: <rule id><TAB><IGNORE|INFO|WARN|FAIL><TAB><reason>
+# Every entry needs a reason. Rules not listed keep their default (WARN); the script fails on High risk only.
+10049	IGNORE	Non-Storable Content: intended. Every response sets Cache-Control: no-store (order data must not be cached).

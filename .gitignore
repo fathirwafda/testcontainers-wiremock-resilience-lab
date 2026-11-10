@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+test-results/
+zap/reports/*
+!zap/reports/.gitkeep
+*.log
+.DS_Store
+
+# Never commit env files (a local hook also blocks them). Variables are documented in README.
+.env*

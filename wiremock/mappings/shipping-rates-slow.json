@@ -1,0 +1,21 @@
+{
+  "priority": 2,
+  "request": {
+    "method": "GET",
+    "urlPath": "/shipping/v1/rates",
+    "queryParameters": {
+      "postcode": {
+        "equalTo": "9999"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "fixedDelayMilliseconds": 3000,
+    "jsonBody": {
+      "amountCents": 995,
+      "currency": "AUD",
+      "service": "express"
+    }
+  }
+}

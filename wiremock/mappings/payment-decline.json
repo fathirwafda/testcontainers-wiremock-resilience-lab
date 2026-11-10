@@ -1,0 +1,19 @@
+{
+  "priority": 2,
+  "request": {
+    "method": "POST",
+    "urlPath": "/payment/v1/payments",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[?(@.customerId == 'cust-decline')]"
+      }
+    ]
+  },
+  "response": {
+    "status": 402,
+    "jsonBody": {
+      "status": "declined",
+      "reason": "card_declined"
+    }
+  }
+}

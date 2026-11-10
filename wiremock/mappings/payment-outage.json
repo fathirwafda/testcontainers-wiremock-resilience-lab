@@ -1,0 +1,15 @@
+{
+  "priority": 2,
+  "request": {
+    "method": "POST",
+    "urlPath": "/payment/v1/payments",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[?(@.customerId == 'cust-outage')]"
+      }
+    ]
+  },
+  "response": {
+    "fault": "CONNECTION_RESET_BY_PEER"
+  }
+}

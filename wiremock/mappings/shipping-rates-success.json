@@ -1,0 +1,15 @@
+{
+  "priority": 10,
+  "request": {
+    "method": "GET",
+    "urlPath": "/shipping/v1/rates"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "amountCents": 995,
+      "currency": "AUD",
+      "service": "express"
+    }
+  }
+}

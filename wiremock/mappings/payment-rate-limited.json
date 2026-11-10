@@ -1,0 +1,21 @@
+{
+  "priority": 2,
+  "request": {
+    "method": "POST",
+    "urlPath": "/payment/v1/payments",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[?(@.customerId == 'cust-ratelimited')]"
+      }
+    ]
+  },
+  "response": {
+    "status": 429,
+    "headers": {
+      "Retry-After": "1"
+    },
+    "jsonBody": {
+      "error": "rate_limited"
+    }
+  }
+}

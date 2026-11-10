@@ -1,0 +1,20 @@
+{
+  "priority": 10,
+  "request": {
+    "method": "POST",
+    "urlPath": "/payment/v1/payments",
+    "headers": {
+      "Idempotency-Key": {
+        "matches": ".+"
+      }
+    }
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"id\":\"pay_{{randomValue length=16 type='ALPHANUMERIC'}}\",\"status\":\"succeeded\"}",
+    "transformers": ["response-template"]
+  }
+}
